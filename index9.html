@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Web Perfect Tabs</title>
+    <style>
+        /* 1. DESIGN STYLING RESET */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Helvetica, sans-serif;
+        }
+
+        body {
+            background-color: #dadbd3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Main Container Layout Frame */
+        .whatsapp-container {
+            display: flex;
+            width: 95%;
+            max-width: 1100px;
+            height: 92vh;
+            background-color: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        /* ==========================================
+           LEFT COLUMN - SIDEBAR NAVIGATION PANEL
+           ========================================== */
+        .sidebar {
+            width: 35%;
+            background-color: #ffffff;
+            border-right: 1px solid #e9edef;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            background-color: #f0f2f5;
+            padding: 15px 20px;
+            font-weight: bold;
+            color: #54656f;
+        }
+
+        /* Top Navigation Tabs Header menu bar */
+        .tab-bar {
+            display: flex;
+            background-color: #008069; /* Original WhatsApp Dark Green */
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            user-select: none;
+        }
+
+        .tab-btn.active-tab {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        /* View Panels Master Container (Scroll area) */
+        .view-container {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Hidden panels by default rules */
+        .panel {
+            display: none;
+            width: 100%;
+        }
+
+        /* Active visibility state class rules */
+        .panel.active-panel {
+            display: block;
+        }
+
+        /* CHAT VIEW: Rows Layout User Item UI */
+        .chat-user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            gap: 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f2f5;
+            transition: background 0.2s;
+        }
+
+        .chat-user-item:hover, .chat-user-item.selected-user {
+            background-color: #f0f2f5;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background-color: #00a884;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .user-details h4 {
+            font-size: 15.5px;
+            color: #111b21;
+            margin-bottom: 3px;
+        }
+        .user-details p {
+            font-size: 13px;
+            color: #667781;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        /* STATUS VIEW: Pure Vertical Circular Grid Rows Layout */
+        .status-user-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            gap: 18px;
+            cursor: pointer;
+            border-bottom: 1px solid #f8fafc;
+            transition: background 0.2s;
+        }
+        .status-user-item:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Circular Green Ring Border Around Status Icons */
+        .status-ring {
+            border: 3px dashed #00a884; 
+            padding: 2px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .status-avatar {
+            width: 44px;
+            height: 44px;
+            background-color: #64748b;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        /* ==========================================
+           RIGHT COLUMN - CONVERSATION CHAT WINDOW
+           ========================================== */
+        .chat-window {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://githubusercontent.com');
+            background-color: #efeae2;
+        }
+
+        .chat-header {
+            background-color: #f0f2f5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e9edef;
+        }
+
+        .chat-stream-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .bubble {
+            padding: 8px 14px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            max-width: 65%;
+            font-size: 14.5px;
+            line-height: 1.4;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+            clear: both;
+        }
+
+        .sent { background-color: #d9fdd3; color: #111b21; float: right; }
+        .received { background-color: #ffffff; color: #111b21; float: left; }
+
+        .chat-footer {
+            background-color: #f0f2f5;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 11px 16px;
+            border: none;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+            background-color: white;
+        }
+
+        .btn-send {
+            background: none;
+            border: none;
+            color: #00a884;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 100%; }
+            .chat-window { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="whatsapp-container">
+        
+        <!-- ================= LEFT COLUMN SECTION ================= -->
+        <div class="sidebar">
+            <div class="sidebar-header">WhatsApp Web Engine</div>
+            
+            <!-- Horizontal Click Tab Bars -->
+            <div class="tab-bar">
+                <div class="tab-btn active-tab" id="chatTabHeader" onclick="switchSidebarTab('chats')">Chats</div>
+                <div class="tab-btn" id="statusTabHeader" onclick="switchSidebarTab('status')">Status</div>
+            </div>
+
+            <div class="view-container">
+                
+                <!-- SHEET 1: VERTICAL CHATS PROFILES LIST (Initially Visible) -->
+                <div class="panel active-panel" id="chatsListPanel">
+                    <!-- Dynamic Rows Data render hooks via javascript -->
+                </div>
+
+                <!-- SHEET 2: PURE VERTICAL CIRCULAR STATUS RING VIEW (Initially Hidden) -->
+                <div class="panel" id="statusListPanel">
+                    
+                    <!-- Vertical Status Row 1 -->
+                    <div class="status-user-item" onclick="alert('Viewing Rahul Verma\'s full image story!')">
+                        <div class="status-ring"><div class="status-avatar">RV</div></div>
+                        <div class="user-details">
+                            <h4>Rahul Verma</h4>
+                            <p>Just now</p>
+                        </div>
+                    </div>
+
+                    <!-- Vertical Status Row 2 -->
+                    <div class="status-user-item" onclick="alert('Viewing Priya Patel\'s full image story!')">
+                        <div class="status-ring"><div class="status-avatar" style="background-color:#db2777;">PP</div></div>
+                        <div class="user-details">
+                            <h4>Priya Patel</h4>
+                            <p>45 minutes ago</p>
+                        </div>
+                    </div>
+
+                    <!-- Vertical Status Row 3 -->
+                    <div class="status-user-item" onclick="alert('Viewing Aman Sharma\'s full image story!')">
+                        <div class="status-ring"><div class="status-avatar" style="background-color:#2563eb;">AS</div></div>
+                        <div class="user-details">
+                            <h4>Aman Sharma</h4>
+                            <p>Today, 10:15 AM</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ================= RIGHT COLUMN SECTION ================= -->
+        <div class="chat-window">
+            <div class="chat-header">
+                <div class="avatar" id="headerAvatar">RV</div>
+                <div>
+                    <h4 id="headerName" style="font-size: 16px; color: #111b21;">Rahul Verma</h4>
+                    <p style="font-size: 12px; color: #667781;">online</p>
+                </div>
+            </div>
+
+            <!-- Active Conversation History logs wrapper panel -->
+            <div class="chat-stream-body" id="activeChatBody"></div>
+
+            <!-- Footer Controls elements -->
+            <div class="chat-footer">
+                <input type="text" id="activeInput" class="chat-input" placeholder="Type a message" onkeypress="handleEnterKey(event)">
+                <button class="btn-send" onclick="sendCustomMessage()">➤</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ================= EASY LOGICAL SCRIPT CONTROLS ================= -->
+    <script>
+        // 1. DATA MEMORY BASE: Chat conversations history memory storage arrays 
+        let chatSessions = {
+            "Rahul Verma": {
+                avatar: "RV",
+                messages: [
+                    { type: "received", text: "Hey bro! Kal project submit kab karna hai?" },
+                    { type: "sent", text: "Subah 10 baje se pehle push karna hoga code." }
+                ]
+            },
+            "Aman Sharma": {
+                avatar: "AS",
+                messages: [
+                    { type: "received", text: "Hi dev, can we review the UI layouts today?" },
+                    { type: "sent", text: "Sure, let's setup a call in evening." }
+                ]
+            },
+            "Priya Patel": {
+                avatar: "PP",
+                messages: [
+                    { type: "received", text: "The glassmorphic login looks premium! 🎉" },
+                    { type: "sent", text: "Thanks Priya! Highly appreciate it." }
+                ]
+            }
+        };
+
+        let activeUser = "Rahul Verma"; // First profile loaded on start up template
+
+        window.onload = function() {
+            renderChatUserList();
+            loadChatSession(activeUser);
+        };
+
+        // 2. VERTICAL TABS ENGINE: Chats aur Status sheets ko absolute hide/show switch karna [Awwwards]
+        function switchSidebarTab(tabName) {
+            const chatPanel = document.getElementById("chatsListPanel");
+            const statusPanel = document.getElementById("statusListPanel");
+            const chatHeader = document.getElementById("chatTabHeader");
+            const statusHeader = document.getElementById("statusTabHeader");
+
+            // Subtitle elements refresh active highlight headers class
+            chatHeader.classList.remove("active-tab");
+            statusHeader.classList.remove("active-tab");
+
+            if (tabName === "chats") {
+                chatHeader.classList.add("active-tab");
+                statusPanel.classList.remove("active-panel"); // Hide Vertical Status Circles
+                chatPanel.classList.add("active-panel");      // Show Profile rows list
+            } else {
+                statusHeader.classList.add("active-tab");
+                chatPanel.classList.remove("active-panel");   // Hide Profile rows list
+                statusPanel.classList.add("active-panel");    // Show Pure Vertical Circular Status items list
+            }
+        }
+
+        // 3. PROFILE CHAT RENDER ENGINE: Loops to map active lists
+        function renderChatUserList() {
+            const container = document.getElementById("chatsListPanel");
+            container.innerHTML = "";
+
+            for (let user in chatSessions) {
+                let messagesArray = chatSessions[user].messages;
+                let lastMsg = messagesArray[messagesArray.length - 1].text;
+                let activeSelectionClass = (user === activeUser) ? "selected-user" : "";
+
+                container.innerHTML += `
+                    <div class="chat-user-item ${activeSelectionClass}" onclick="loadChatSession('${user}')">
+                        <div class="avatar">${chatSessions[user].avatar}</div>
+                        <div class="user-details" style="margin-left:15px;">
+                            <h4>${user}</h4>
+                            <p>${lastMsg}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function loadChatSession(userName) {
+            activeUser = userName;
+
+            document.getElementById("headerName").innerText = userName;
+            document.getElementById("headerAvatar").innerText = chatSessions[userName].avatar;
+
+            renderChatUserList(); // Update highlight tracker bounds on list rows
+
+            const body = document.getElementById("activeChatBody");
+            body.innerHTML = "";
+
+            chatSessions[userName].messages.forEach(msg => {
+                body.innerHTML += `<div class="bubble ${msg.type}">${msg.text}</div>`;
+            });
+
+            body.scrollTop = body.scrollHeight; // Focus on latest bottom items log stream
+        }
+
+        // 4. ACTION INTERFACE SEND INPUT
+        function handleEnterKey(e) { if (e.key === "Enter") sendCustomMessage(); }
+
+        function sendCustomMessage() {
+            var input = document.getElementById("activeInput");
+            var textVal = input.value.trim();
+            if (textVal === "") return;
+
+            // Push values inside active array store data
+            chatSessions[activeUser].messages.push({ type: "sent", text: textVal });
+
+            loadChatSession(activeUser); // Reload view
+            input.value = "";
+        }
+    </script>
+
+</body>
+</html>
