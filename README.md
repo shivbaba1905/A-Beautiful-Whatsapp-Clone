@@ -1,27 +1,30 @@
-# 🧠 Gamified Quiz Application
+# 💬 WhatsApp Web/Mobile UI Clone
 
-An engaging, vibrant, and interactive quiz app designed with modern UI trends, clean card layouts, and crisp feedback animations.
+A high-fidelity frontend clone of WhatsApp, focusing on pixel-perfect replication of its chat layouts, real-time interface switches, and responsive design systems.
 
 ---
 
 ## 🚀 Live Links
- **https://github.com/shivbaba1905/A-Beautiful-Whatsapp-Clone/tree/main**
+*    **https://github.com/shivbaba1905/A-Beautiful-Whatsapp-Clone/tree/main**
   
 
 ---
 
-## 📸 Design & UI Preview
-*<img width="1193" height="641" alt="image" src="https://github.com/user-attachments/assets/8163efb4-5501-4955-a608-fdc20186a14a" />
+## 📸 Interface Preview
+*<img width="1118" height="638" alt="image" src="https://github.com/user-attachments/assets/027733d6-0113-4831-814f-c1f2f308ae8c" />
 *
 
 
 ---
 
 ## 🎨 Design System & Specifications
-*   **Typography:** Poppins (Playful yet professional font selection)
+*   **Theme Match:** Pixel-perfect recreation of WhatsApp’s official design guidelines.
+*   **Typography:** Segoe UI (Desktop feel) / System Sans-Serif (Mobile fluid text).
 *   **Color Palette:**
-    *   Correct Choice: `#22C55E` (Emerald Success)
-    *   Incorrect Choice: `#EF4444` (Rose Error)
-    *   Accent Violet: `#8B5CF6`
+    *   Teal Header: `#008069` (Official WhatsApp Green)
+    *   Chat Background: `#EFEAE2` (Classic doodle wall background color)
+    *   Incoming Bubble: `#FFFFFF`
+    *   Outgoing Bubble: `#D9FDD3` (Light Green)
 
 ---
+
